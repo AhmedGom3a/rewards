@@ -86,7 +86,15 @@
     <a href="{{ route('rewards.create') }}" class="create-btn">+ Create New Reward</a>
 
     @if(session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
+        <div style="color: green; padding: 10px; background-color: #e2f9e2; border: 1px solid green; margin-bottom: 20px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div style="color: red; padding: 10px; background-color: #f9e2e2; border: 1px solid red; margin-bottom: 20px;">
+            {{ session('error') }}
+        </div>
     @endif
 
     @if($rewards->count())

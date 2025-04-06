@@ -60,16 +60,6 @@
             background-color: #2b6cb0;
         }
 
-        .errors {
-            color: red;
-            margin-bottom: 15px;
-        }
-
-        .errors ul {
-            margin: 0;
-            padding-left: 18px;
-        }
-
         .current-img {
             margin-top: 10px;
         }
@@ -84,6 +74,34 @@
 
         .back-link:hover {
             color: #2d3748;
+        }
+
+        .errors {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .errors ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .errors li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .errors li::before {
+            content: "❌";
+            margin-right: 10px;
+            font-size: 18px;
         }
     </style>
 </head>
