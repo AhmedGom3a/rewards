@@ -13,11 +13,14 @@
             padding: 12px;
             border: 1px solid #ddd;
             text-align: left;
+            vertical-align: middle;
         }
 
         img {
             max-width: 100px;
             height: auto;
+            display: block;
+            max-height: 120px; /* limit max height for image */
         }
 
         .create-btn {
@@ -44,6 +47,36 @@
         a.reward-link:hover {
             text-decoration: underline;
         }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .actions a,
+        .actions form {
+            display: inline;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .icon-btn.edit {
+            color: #4299e1;
+        }
+
+        .icon-btn.delete {
+            color: #e53e3e;
+        }
+
+        .icon-btn.delete:hover {
+            color: #c53030;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +96,7 @@
                     <th>Description</th>
                     <th>Price</th>
                     <th>Image</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,6 +115,20 @@
                             @else
                                 No image
                             @endif
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ route('rewards.edit', $reward->id) }}" title="Edit">
+                                    ✏️
+                                </a>
+                                <form action="{{ route('rewards.destroy', $reward->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reward?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="icon-btn delete" title="Delete">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

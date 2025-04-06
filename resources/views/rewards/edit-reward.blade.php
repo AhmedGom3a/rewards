@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Reward</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2d3748;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            background-color: #3182ce;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        .errors {
+            color: red;
+            margin-bottom: 15px;
+        }
+
+        .errors ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .current-img {
+            margin-top: 10px;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #4a5568;
+        }
+
+        .back-link:hover {
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Edit Reward</h1>
+
+    @if($errors->any())
+        <div class="errors">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('rewards.update', $reward->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" value="{{ old('name', $reward->name) }}">
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" rows="4">{{ old('description', $reward->description) }}</textarea>
+
+        <label for="price">Price:</label>
+        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $reward->price) }}">
+
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image">
+
+        @if($reward->image)
+            <div class="current-img">
+                <strong>Current Image:</strong><br>
+                <img src="{{ asset('storage/' . $reward->image) }}" alt="Reward Image" style="max-width: 100%; border-radius: 6px;">
+            </div>
+        @endif
+
+        <button type="submit">Update Reward</button>
+    </form>
+
+    <a href="{{ route('rewards.index') }}" class="back-link">← Back to List</a>
+</div>
+
+</body>
+</html>

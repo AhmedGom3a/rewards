@@ -1,65 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reward Details</title>
+    <title>{{ $reward->name }}</title>
     <style>
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            font-family: Arial, sans-serif;
-        }
-
-        .card {
-            border: 1px solid #ddd;
+        .reward-details {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 15px;
-            border-radius: 6px;
         }
 
         h1 {
-            margin-bottom: 10px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        p {
-            margin: 8px 0;
+        .reward-image {
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 20px;
         }
 
-        a {
-            display: inline-block;
+        .reward-info {
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .actions a,
+        .actions form {
+            display: inline;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .icon-btn.edit {
+            color: #4299e1;
+        }
+
+        .icon-btn.delete {
+            color: #e53e3e;
+        }
+
+        .icon-btn.delete:hover {
+            color: #c53030;
+        }
+
+        .go-back {
+            display: block;
+            text-align: center;
             margin-top: 20px;
+            font-size: 16px;
             text-decoration: none;
-            background-color: #3182ce;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
+            color: #3182ce;
         }
 
-        a:hover {
-            background-color: #2c5282;
+        .go-back:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h1>{{ $reward->name }}</h1>
+    <div class="reward-details">
+        <h1>{{ $reward->name }}</h1>
 
-            @if($reward->image)
-                <img src="{{ asset('storage/' . $reward->image) }}" alt="{{ $reward->name }}">
-            @endif
-
-            <p><strong>Description:</strong> {{ $reward->description ?? 'N/A' }}</p>
-            <p><strong>Price:</strong> ${{ number_format($reward->price, 2) }}</p>
-
-            <a href="{{ route('rewards.index') }}">← Back to Rewards</a>
+        <img src="{{ asset('storage/' . $reward->image) }}" alt="{{ $reward->name }}" class="reward-image">
+        
+        <div class="reward-info">
+            <strong>Description:</strong> <p>{{ $reward->description }}</p>
         </div>
+        
+        <div class="reward-info">
+            <strong>Price:</strong> ${{ number_format($reward->price, 2) }}
+        </div>
+
+        <div class="actions">
+            <a href="{{ route('rewards.edit', $reward->id) }}" class="icon-btn edit" title="Edit">
+                ✏️ Edit
+            </a>
+            <form action="{{ route('rewards.destroy', $reward->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reward?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="icon-btn delete" title="Delete">
+                    🗑️ Delete
+                </button>
+            </form>
+        </div>
+
+        <a href="{{ route('rewards.index') }}" class="go-back">← Back to Rewards List</a>
     </div>
 </body>
 </html>
