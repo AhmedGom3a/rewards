@@ -47,6 +47,7 @@
 
         .icon-btn.edit {
             color: #4299e1;
+            text-decoration: none;
         }
 
         .icon-btn.delete {

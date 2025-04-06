@@ -68,6 +68,7 @@
 
         .icon-btn.edit {
             color: #4299e1;
+            text-decoration: none;
         }
 
         .icon-btn.delete {
@@ -118,7 +119,7 @@
                         </td>
                         <td>
                             <div class="actions">
-                                <a href="{{ route('rewards.edit', $reward->id) }}" title="Edit">
+                                <a href="{{ route('rewards.edit', $reward->id) }}" class="icon-btn edit" title="Edit">
                                     ✏️
                                 </a>
                                 <form action="{{ route('rewards.destroy', $reward->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reward?');">
