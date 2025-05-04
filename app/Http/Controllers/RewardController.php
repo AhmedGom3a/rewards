@@ -8,10 +8,20 @@ use Illuminate\Support\Facades\Storage;
 
 class RewardController extends Controller
 {
+    private const REWARD_PER_PAGE = 10;
+
     public function index()
     {
-        $rewards = Reward::all();
+        $rewards = Reward::limit(self::REWARD_PER_PAGE)->get();
         return view('rewards.index', compact('rewards'));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $rewards = Reward::where('name', 'LIKE', "%{$query}%")->orWhere('description', 'LIKE', "%{$query}%")->get();
+
+        return response()->json($rewards);
     }
 
     public function show($id)

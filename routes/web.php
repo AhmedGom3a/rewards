@@ -15,4 +15,5 @@ Route::prefix('rewards')->group(function () {
     Route::put('/{reward}', [RewardController::class, 'update'])->name('rewards.update');
     Route::delete('/{reward}', [RewardController::class, 'destroy'])->name('rewards.destroy');
     Route::post('/', [RewardController::class, 'store'])->name('rewards.store');
+    Route::post('/search', [RewardController::class, 'search'])->name('rewards.search');
 });
