@@ -83,6 +83,9 @@
 <body>
     <h1>Rewards List</h1>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <input type="text" id="search-input" placeholder="Search rewards..." style="padding: 10px; width: 300px; font-size: 16px; margin-bottom: 10px;">
+
     <a href="{{ route('rewards.create') }}" class="create-btn">+ Create New Reward</a>
 
     @if(session('success'))
@@ -104,11 +107,10 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Price</th>
-                    <th>Image</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="rewards-table-body">
                 @foreach($rewards as $reward)
                     <tr>
                         <td>
@@ -118,13 +120,6 @@
                         </td>
                         <td>{{ $reward->description }}</td>
                         <td>${{ number_format($reward->price, 2) }}</td>
-                        <td>
-                            @if($reward->image)
-                                <img src="{{ asset('storage/' . $reward->image) }}" alt="{{ $reward->name }}">
-                            @else
-                                No image
-                            @endif
-                        </td>
                         <td>
                             <div class="actions">
                                 <a href="{{ route('rewards.edit', $reward->id) }}" class="icon-btn edit" title="Edit">
@@ -146,5 +141,63 @@
     @else
         <p>No rewards found.</p>
     @endif
+
+    <script>
+        async function searchRewards(query) {
+            const response = await fetch("{{ route('rewards.search') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ query: query })
+            });
+
+            const rewards = await response.json();
+            renderRewards(rewards);
+        }
+
+        function renderRewards(rewards) {
+            const tbody = document.getElementById('rewards-table-body');
+            tbody.innerHTML = '';
+
+            if (rewards.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No rewards found.</td></tr>';
+                return;
+            }
+
+            rewards.forEach(reward => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>
+                        <a href="/rewards/${reward.id}" class="reward-link">
+                            ${reward.name}
+                        </a>
+                    </td>
+                    <td>${reward.description}</td>
+                    <td>$${parseFloat(reward.price).toFixed(2)}</td>
+                    <td>
+                        <div class="actions">
+                            <a href="/rewards/${reward.id}/edit" class="icon-btn edit" title="Edit">✏️</a>
+                            <form action="/rewards/${reward.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reward?');">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="icon-btn delete" title="Delete">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        document.getElementById('search-input').addEventListener('input', function () {
+            const query = this.value.trim();
+            searchRewards(query);
+        });
+    </script>
+
 </body>
 </html>
